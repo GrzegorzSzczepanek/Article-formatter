@@ -51,3 +51,6 @@ class ApiManager:
             size=size
         )
         return [image['url'] for image in response['data']]
+    
+    
+    
