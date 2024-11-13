@@ -1,4 +1,4 @@
-# oxido-zadanie
+# zadanie
 
 1. Łączy się z API OpenAI;
 2. Odczytuje plik tekstowy z artykułem – tu znajdziesz plik do pobrania;
