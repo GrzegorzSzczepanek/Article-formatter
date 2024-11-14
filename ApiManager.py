@@ -72,7 +72,7 @@ class ApiManager:
             "z dokładnym opisem promptu, który można wykorzystać do wygenerowania grafiki. "
             "Atrybut alt powinien zawierać opis będący bezpośrednim odniesieniem do treści artykułu. "
             "Umieść podpisy pod grafikami używając odpowiednich tagów HTML. Nie używaj CSS ani JavaScript. "
-            "Zwróć tylko zawartość wstawioną pomiędzy tagami <body> i </body>, bez znaczników <html>, "
+            "Zwróć tylko sformatowaną zawartość, bez znaczników <html>, <head> i <body>, "
             "<head> ani <body>.\n\nOto Artykuł:\n"
             f"{article_content}"
         )
