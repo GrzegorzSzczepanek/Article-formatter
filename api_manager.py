@@ -1,7 +1,6 @@
 import openai
 import os
 import logging
-from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
 
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
@@ -68,7 +67,7 @@ class ApiManager:
         prompt = (
             "Przekształć poniższy artykuł w czysty kod HTML, używając odpowiednich tagów "
             "do strukturyzacji treści. Określ miejsca, gdzie warto wstawić grafiki, oznaczając "
-            "je tagiem <img> z atrybutem src=\"image_placeholder.jpg\" oraz dodaj atrybut alt "
+            "je tagiem <img> z atrybutem src=\"image_placeholder_{idx}.jpg\" gdzie jest liczbą naturalną od 1, oraz dodaj atrybut alt "
             "z dokładnym opisem promptu, który można wykorzystać do wygenerowania grafiki. "
             "Atrybut alt powinien zawierać opis będący bezpośrednim odniesieniem do treści artykułu. "
             "Umieść podpisy pod grafikami używając odpowiednich tagów HTML. Nie używaj CSS ani JavaScript. "
@@ -76,6 +75,7 @@ class ApiManager:
             "<head> ani <body>.\n\nOto Artykuł:\n"
             f"{article_content}"
         )
+        # prompt = ( "test" )
 
         try:
             response = openai.chat.completions.create(
