@@ -24,10 +24,12 @@ class FileManager:
             raise FileNotFoundError(f"The file '{file_path}' does not exist.")
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as file:
+            with open(file_path, "r", encoding="utf-8") as file:
                 return file.read()
         except IOError as e:
-            raise IOError(f"An error occurred while reading the file '{file_path}': {e}")
+            raise IOError(
+                f"An error occurred while reading the file '{file_path}': {e}"
+            )
 
     def write_file(self, file_path: str, content: str) -> None:
         """
@@ -40,11 +42,13 @@ class FileManager:
             IOError: If the file cannot be written.
         """
         try:
-            with open(file_path, 'w', encoding='utf-8') as file:
+            with open(file_path, "w", encoding="utf-8") as file:
                 file.write(content)
         except IOError as e:
-            raise IOError(f"An error occurred while writing to the file '{file_path}': {e}")
-        
+            raise IOError(
+                f"An error occurred while writing to the file '{file_path}': {e}"
+            )
+
     def extract_image_alts(self, html_content: str) -> list[str]:
         """
         Extract all alt texts from <img> tags in the provided HTML content.
@@ -55,12 +59,14 @@ class FileManager:
         Returns:
             List[str]: A list of alt texts in the order they appear in the HTML.
         """
-        soup = BeautifulSoup(html_content, 'html.parser')
-        img_tags = soup.find_all('img')
-        alts = [img.get('alt', '') for img in img_tags]
+        soup = BeautifulSoup(html_content, "html.parser")
+        img_tags = soup.find_all("img")
+        alts = [img.get("alt", "") for img in img_tags]
         return alts
-    
-    def replace_image_placeholders(self, html_content: str, image_filenames: list[str]) -> str:
+
+    def replace_image_placeholders(
+        self, html_content: str, image_filenames: list[str]
+    ) -> str:
         """
         Replace image placeholders in the HTML content with actual image filenames.
 
@@ -71,14 +77,14 @@ class FileManager:
         Returns:
             str: The updated HTML content with actual image filenames.
         """
-        soup = BeautifulSoup(html_content, 'html.parser')
-        img_tags = soup.find_all('img')
+        soup = BeautifulSoup(html_content, "html.parser")
+        img_tags = soup.find_all("img")
 
         for img_tag, filename in zip(img_tags, image_filenames):
-            img_tag['src'] = filename
-        
+            img_tag["src"] = filename
+
         return str(soup)
-    
+
     def download_image(self, url: str, save_path: str) -> None:
         """
         Download an image from a URL and save it to the specified path.
@@ -93,8 +99,10 @@ class FileManager:
         try:
             response = requests.get(url, stream=True)
             response.raise_for_status()
-            with open(save_path, 'wb') as out_file:
+            with open(save_path, "wb") as out_file:
                 for chunk in response.iter_content(chunk_size=8192):
                     out_file.write(chunk)
         except Exception as e:
-            raise Exception(f"An error occurred while downloading the image from '{url}': {e}")
+            raise Exception(
+                f"An error occurred while downloading the image from '{url}': {e}"
+            )

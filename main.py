@@ -72,7 +72,7 @@ def generate_images(file_manager: FileManager, api_manager: ApiManager, html_fil
             logger.info(f"Generating image {idx} based on alt text: '{alt}'")
             image_url = api_manager.generate_image_url(alt)
             
-            # Create a unique filename with the base name 'image_placeholder'
+            
             image_filename = f"image_placeholder_{idx}.jpg"
             save_path = f"{image_filename}"
             file_manager.download_image(image_url, save_path)
@@ -98,7 +98,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="A CLI tool to generate HTML and images for articles.")
     subparsers = parser.add_subparsers(dest='command', required=True, help='Sub-commands')
 
-    # Subparser for generating HTML
+    
     parser_html = subparsers.add_parser('generate-html', help='Generate artykul.html from file.txt')
     parser_html.add_argument(
         '--input',
@@ -113,7 +113,7 @@ def main() -> None:
         help='Output HTML file (default: artykul.html)'
     )
 
-    # Subparser for generating Images
+    
     parser_images = subparsers.add_parser('generate-images', help='Generate images for existing artykul.html')
     parser_images.add_argument(
         '--html',

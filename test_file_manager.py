@@ -2,18 +2,17 @@ import unittest
 from file_manager import FileManager
 import os
 
+
 class TestFileManager(unittest.TestCase):
     def setUp(self):
         self.file_manager = FileManager()
         self.test_file = "test_file.txt"
         self.test_content = "This is a test."
 
-        # Create a test file
-        with open(self.test_file, 'w', encoding='utf-8') as file:
+        with open(self.test_file, "w", encoding="utf-8") as file:
             file.write(self.test_content)
 
     def tearDown(self):
-        # Remove the test file
         if os.path.exists(self.test_file):
             os.remove(self.test_file)
 
@@ -39,7 +38,7 @@ class TestFileManager(unittest.TestCase):
     def test_read_nonexistent_file(self):
         with self.assertRaises(FileNotFoundError):
             self.file_manager.read_file("nonexistent.txt")
-    
+
 
 if __name__ == "__main__":
     unittest.main()

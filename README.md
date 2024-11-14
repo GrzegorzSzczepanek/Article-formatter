@@ -1,5 +1,7 @@
 Dokumentacja aplikacji do przetwarzania artykułów z użyciem OpenAI API
-# Opis projektu
+# Dokumentacja aplikacji do przetwarzania artykułów z użyciem OpenAI API
+
+## Opis projektu
 
 Aplikacja służy do przetwarzania plików tekstowych z artykułami, generowania strukturalnego HTML za pomocą OpenAI API oraz pobierania odpowiednich grafik na podstawie opisów. Wygenerowany HTML jest zapisywany jako `artykul.html`.
 
@@ -22,16 +24,26 @@ Aplikacja służy do przetwarzania plików tekstowych z artykułami, generowania
 
 ## Wymagania
 
-Przed uruchomieniem aplikacji należy zainstalować wymagane biblioteki:
+Przed uruchomieniem aplikacji należy stworzyć środowisko wirtualne i zainstalować wymagane biblioteki:
 
+> Mac/Linux
 ```sh
+python3 -m venv venv
+
+pip install -r requirements.txt
+```
+> Windows
+```sh
+py -m venv venv
+
+venv\Scripts\activate
+
 pip install -r requirements.txt
 ```
 
 Plik `requirements.txt` zawiera:
 
 - `openai==1.54.4`
-- `tenacity==9.0.0`
 - `beautifulsoup4==4.12.3`
 - `requests==2.32.3`
 
@@ -45,7 +57,7 @@ export OPENAI_API_KEY="twój_klucz_api"
 
 Zastąp `"twój_klucz_api"` swoim rzeczywistym kluczem API. To polecenie ustawia zmienną środowiskową `OPENAI_API_KEY`, która jest wykorzystywana przez aplikację do uwierzytelnienia się w API OpenAI.
 
-## Instalacja zależności
+## Instalacja bibliotek
 
 Zainstaluj wymagane moduły, uruchamiając poniższe polecenie:
 
@@ -53,15 +65,63 @@ Zainstaluj wymagane moduły, uruchamiając poniższe polecenie:
 pip install -r requirements.txt
 ```
 
-## Uruchamianie aplikacji
+## Korzystanie z interfejsu wiersza poleceń (CLI)
 
-Gdy spełnione są wszystkie wymagania, uruchom aplikację:
+Aplikacja oferuje interfejs wiersza poleceń (CLI) z dwoma głównymi komendami:
+1. `generate-html`: Generuje plik HTML `artykul.html` na podstawie treści z pliku tekstowego.
+2. `generate-images`: Generuje obrazy na podstawie tagów `<img>` z atrybutami `alt` w istniejącym pliku `artykul.html`.
 
+Poniżej znajduje się instrukcja krok po kroku do uruchomienia pełnego procesu.
+
+### Generowanie pliku HTML
+
+Aby wygenerować plik `artykul.html` z pliku tekstowego `file.txt`, użyj polecenia:
+
+> Mac/Linux
 ```sh
-python main.py
+python3 main.py generate-html --input file.txt --output artykul.html
 ```
 
-Aplikacja przetworzy plik `file.txt`, wygeneruje HTML, stworzy grafiki i zapisze końcowy plik `artykul.html` w katalogu projektu.
+> Windows
+
+```sh
+py main.py generate-html --input file.txt --output artykul.html
+```
+
+Parametry opcjonalne:
+
+- `--input`: Określa plik tekstowy z artykułem (domyślnie `file.txt`).
+- `--output`: Określa nazwę pliku wyjściowego HTML (domyślnie `artykul.html`).
+
+### Generowanie obrazów
+
+Po wygenerowaniu pliku `artykul.html`, można użyć poniższego polecenia, aby wygenerować obrazy na podstawie atrybutów `alt` w tagach `<img>`:
+
+```sh
+python3 main.py generate-images --html artykul.html
+```
+
+Parametr opcjonalny:
+
+- `--html`: Określa plik HTML do przetworzenia (domyślnie `artykul.html`).
+
+### Uruchomienie pełnego procesu
+
+Aby wygenerować zarówno HTML, jak i obrazy w jednym procesie, można użyć następujących poleceń razem:
+
+Dla systemów Unix (Linux/macOS):
+
+```sh
+python main.py generate-html --input file.txt --output artykul.html && python main.py generate-images --html artykul.html
+```
+
+Dla systemu Windows:
+
+```sh
+py main.py generate-html --input file.txt --output artykul.html & py main.py generate-images --html artykul.html
+```
+
+Po wykonaniu tych kroków, plik `artykul.html` będzie zawierał wygenerowane obrazy oraz odpowiednio zaktualizowane ścieżki do nich.
 
 ## Szczegółowy opis działania
 
@@ -76,8 +136,8 @@ Aplikacja przetworzy plik `file.txt`, wygeneruje HTML, stworzy grafiki i zapisze
 ## Wykorzystane biblioteki
 
 - `openai` – interfejs do komunikacji z OpenAI API.
-- `tenacity` – umożliwia obsługę ponownych prób połączenia z API w przypadku błędów.
 - `beautifulsoup4` – używana do parsowania i edycji struktury HTML.
 - `requests` – używana do pobierania obrazów z URL.
+- `os` - Uzywana do działania na plikach.
 
 Dodatkowo, pliki `ApiManager.py` oraz `FileManager.py` zawierają klasę `ApiManager` oraz `FileManager` z odpowiednimi metodami, które obsługują komunikację z API oraz operacje na plikach.
