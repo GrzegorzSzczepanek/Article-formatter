@@ -1,32 +1,100 @@
+import os
+from bs4 import BeautifulSoup
+import requests
+
 
 class FileManager:
     def __init__(self):
         pass
 
-    def read_file(self, file_path: "str") -> str:
+    def read_file(self, file_path: str) -> str:
         """
-        Read the contents of a file
+        Read the contents of a file.
         Args:
-            file_path (str): The path to the file
-        """
-        with open(file_path, 'r') as file:
-            return file.read()
+            file_path (str): The path to the file.
 
-    def write_file(self, file_path, content: str) -> None:
+        Returns:
+            str: The content of the file.
+
+        Raises:
+            FileNotFoundError: If the file does not exist.
+            IOError: If the file cannot be read.
         """
-        Write content to a file
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"The file '{file_path}' does not exist.")
+
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                return file.read()
+        except IOError as e:
+            raise IOError(f"An error occurred while reading the file '{file_path}': {e}")
+
+    def write_file(self, file_path: str, content: str) -> None:
+        """
+        Write content to a file.
         Args:
-            file_path (str): The path to the file
-            content (str): The content to write to the file
+            file_path (str): The path to the file.
+            content (str): The content to write to the file.
+
+        Raises:
+            IOError: If the file cannot be written.
         """
-        with open(file_path, 'w') as file:
-            file.write(content)
-            
-    def read_as_paragraphs(self, file_path: str) -> list[str]:
+        try:
+            with open(file_path, 'w', encoding='utf-8') as file:
+                file.write(content)
+        except IOError as e:
+            raise IOError(f"An error occurred while writing to the file '{file_path}': {e}")
+        
+    def extract_image_alts(self, html_content: str) -> list[str]:
         """
-        Read the contents of a file and split it into paragraphs
+        Extract all alt texts from <img> tags in the provided HTML content.
+
         Args:
-            file_path (str): The path to the file
+            html_content (str): The HTML content to parse.
+
+        Returns:
+            List[str]: A list of alt texts in the order they appear in the HTML.
         """
-        with open(file_path, 'r') as file:
-            return file.read().split("\n\n")
+        soup = BeautifulSoup(html_content, 'html.parser')
+        img_tags = soup.find_all('img')
+        alts = [img.get('alt', '') for img in img_tags]
+        return alts
+    
+    def replace_image_placeholders(self, html_content: str, image_filenames: list[str]) -> str:
+        """
+        Replace image placeholders in the HTML content with actual image filenames.
+
+        Args:
+            html_content (str): The original HTML content with placeholders.
+            image_filenames (List[str]): A list of image filenames to replace the placeholders.
+
+        Returns:
+            str: The updated HTML content with actual image filenames.
+        """
+        soup = BeautifulSoup(html_content, 'html.parser')
+        img_tags = soup.find_all('img')
+
+        for img_tag, filename in zip(img_tags, image_filenames):
+            img_tag['src'] = filename
+        
+        return str(soup)
+    
+    def download_image(self, url: str, save_path: str) -> None:
+        """
+        Download an image from a URL and save it to the specified path.
+
+        Args:
+            url (str): The URL of the image to download.
+            save_path (str): The local path where the image will be saved.
+
+        Raises:
+            Exception: If the image cannot be downloaded.
+        """
+        try:
+            response = requests.get(url, stream=True)
+            response.raise_for_status()
+            with open(save_path, 'wb') as out_file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    out_file.write(chunk)
+        except Exception as e:
+            raise Exception(f"An error occurred while downloading the image from '{url}': {e}")
