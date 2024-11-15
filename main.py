@@ -6,8 +6,6 @@ import os
 from file_manager import FileManager
 from api_manager import ApiManager
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
 
 def generate_html(file_manager: FileManager, api_manager: ApiManager, input_file: str, output_file: str) -> None:
     """
@@ -25,11 +23,11 @@ def generate_html(file_manager: FileManager, api_manager: ApiManager, input_file
     """
     try:
         article_content = file_manager.read_file(input_file)
-        logger.info(f"Successfully read the article from '{input_file}'.")
+        logger.info(f"Odczytano artykuł z pliku '{input_file}'.")
 
-        logger.info("Generating initial HTML content with image placeholders...")
+        logger.info("Tworzenie pliku HTML z placeholderami na zdjęcia...")
         initial_html = api_manager.generate_html(article_content)
-        logger.info("Initial HTML content generated successfully.")
+        logger.info("Plik HTML został wygenerowany pomyślnie.")
 
         file_manager.write_file(output_file, initial_html)
         logger.info(f"Final HTML content written to '{output_file}' successfully.")
@@ -185,4 +183,6 @@ def main() -> None:
         parser.print_help()
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
     main()

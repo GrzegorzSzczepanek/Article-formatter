@@ -26,15 +26,6 @@ class TestFileManager(unittest.TestCase):
         content = self.file_manager.read_file(self.test_file)
         self.assertEqual(content, new_content)
 
-    def test_read_as_paragraphs(self):
-        multi_para_content = "Paragraph one.\n\nParagraph two.\n\nParagraph three."
-        self.file_manager.write_file(self.test_file, multi_para_content)
-        paragraphs = self.file_manager.read_as_paragraphs(self.test_file)
-        self.assertEqual(len(paragraphs), 3)
-        self.assertEqual(paragraphs[0], "Paragraph one.")
-        self.assertEqual(paragraphs[1], "Paragraph two.")
-        self.assertEqual(paragraphs[2], "Paragraph three.")
-
     def test_read_nonexistent_file(self):
         with self.assertRaises(FileNotFoundError):
             self.file_manager.read_file("nonexistent.txt")

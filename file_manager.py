@@ -134,3 +134,12 @@ class FileManager:
             return str(soup)
         except Exception as e:
             raise Exception(f"An error occurred while inserting content into body: {e}")
+        
+        
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
+    logger.info("This is an INFO log.")
+    logger.warning("This is a WARNING log.")
+    logger.error("This is an ERROR log.")
+

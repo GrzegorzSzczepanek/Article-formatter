@@ -2,14 +2,13 @@ import openai
 import os
 import logging
 
-logging.basicConfig(level=logging.ERROR)
-logger = logging.getLogger(__name__)
-
 
 class ApiManager:
     def __init__(self):
         self.api_key = self.get_api_key()
         openai.api_key = self.api_key
+        logging.basicConfig(level=logging.ERROR)
+        self.logger = logging.getLogger(__name__)
 
     def get_api_key(self) -> str:
         """
@@ -66,8 +65,10 @@ class ApiManager:
             "<head> ani <body>.\n\nOto Artykuł:\n"
             f"{article_content}"
         )
-
+        
+        self.logger.info("Wysyłanie zapytania do API.")
         try:
+            self.logger.info("Generowanie sformatowanego tekstu. Może to zająć chwilę...")
             response = openai.chat.completions.create(
                 model="gpt-4",
                 messages=[
@@ -104,7 +105,7 @@ class ApiManager:
             image_url = response.data[0].url
             return image_url
         except Exception as e:
-            logger.error(f"Unexpected error during image generation: {e}")
+            self.logger.error(f"Unexpected error during image generation: {e}")
             raise
 
 
