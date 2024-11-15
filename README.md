@@ -1,9 +1,24 @@
 Dokumentacja aplikacji do przetwarzania artykułów z użyciem OpenAI API
+Ta aplikacja CLI automatyzuje process formatowania
+
 # Dokumentacja aplikacji do przetwarzania artykułów z użyciem OpenAI API
 
 ## Opis projektu
 
-Aplikacja służy do przetwarzania plików tekstowych z artykułami, generowania strukturalnego HTML za pomocą OpenAI API oraz pobierania odpowiednich grafik na podstawie opisów. Wygenerowany HTML jest zapisywany jako `artykul.html`.
+Aplikacja służy do przetwarzania plików tekstowych z artykułami, generowania strukturalnego HTML za pomocą OpenAI API oraz pobierania odpowiednich grafik na podstawie opisów. Wygenerowany HTML jest zapisywany jako `artykul.html`. Dodatkowo, aplikacja umożliwia wygenerowanie podglądu artykułu w pliku `podglad.html` na podstawie szablonu `szablon.html` oraz wygenerowanego artykułu `artykul.html`.
+
+
+## Szczegółowy opis działania
+
+1. **Inicjalizacja**: `main.py` inicjalizuje `FileManager` i `ApiManager`.
+2. **Odczyt pliku**: Artykuł jest odczytywany z `file.txt` przy użyciu `file_manager.read_file`.
+3. **Generowanie HTML**: OpenAI API tworzy HTML z miejscami na grafiki za pomocą metody `api_manager.generate_html`.
+4. **Tworzenie grafik**: Na podstawie tagów alt generowane są obrazy przy użyciu `api_manager.generate_image_url`.
+5. **Pobieranie obrazów**: Pobierane obrazy są zapisywane lokalnie za pomocą `file_manager.download_image`.
+6. **Zamiana placeholderów**: Zamieniane są znaczniki `<img>` na rzeczywiste ścieżki plików graficznych za pomocą `file_manager.replace_image_placeholders`.
+7. **Zapisanie HTML**: Gotowy HTML jest zapisywany jako `artykul.html` przy użyciu `file_manager.write_file`.
+8. **Tworzenie podglądu**: Plik `podglad.html` jest generowany na podstawie szablonu `szablon.html` i artykułu `artykul.html` za pomocą `main.py`.
+
 
 ## Struktura plików
 
@@ -129,17 +144,29 @@ python main.py generate-html --input file.txt --output artykul.html && python ma
 py main.py generate-html --input file.txt --output artykul.html & py main.py generate-images --html artykul.html
 ```
 
+### Generowanie podglądu
+
+Aby wygenerować plik `podglad.html` na podstawie szablonu `szablon.html` i artykułu `artykul.html`, użyj polecenia:
+
+> Mac/Linux
+```sh
+python3 main.py create-podglad --szablon szablon.html --artykul artykul.html --podglad podglad.html
+```
+
+> Windows
+```cmd
+py main.py create-podglad --szablon szablon.html --artykul artykul.html --podglad podglad.html
+```
+
+Parametry:
+
+- `--szablon`: Określa plik HTML z szablonem.
+- `--artykul`: Określa plik HTML z artykułem.
+- `--podglad`: Określa nazwę pliku wyjściowego HTML z podglądem.
+
+Po wykonaniu tego polecenia, plik `podglad.html` będzie zawierał wygenerowany podgląd artykułu na podstawie szablonu.
+
 Po wykonaniu tych kroków, plik `artykul.html` będzie zawierał wygenerowane obrazy oraz odpowiednio zaktualizowane ścieżki do nich.
-
-## Szczegółowy opis działania
-
-1. **Inicjalizacja**: `main.py` inicjalizuje `FileManager` i `ApiManager`.
-2. **Odczyt pliku**: Artykuł jest odczytywany z `file.txt` przy użyciu `file_manager.read_file`.
-3. **Generowanie HTML**: OpenAI API tworzy HTML z miejscami na grafiki za pomocą metody `api_manager.generate_html`.
-4. **Tworzenie grafik**: Na podstawie tagów alt generowane są obrazy przy użyciu `api_manager.generate_image_url`.
-5. **Pobieranie obrazów**: Pobierane obrazy są zapisywane lokalnie za pomocą `file_manager.download_image`.
-6. **Zamiana placeholderów**: Zamieniane są znaczniki `<img>` na rzeczywiste ścieżki plików graficznych za pomocą `file_manager.replace_image_placeholders`.
-7. **Zapisanie HTML**: Gotowy HTML jest zapisywany jako `artykul.html` przy użyciu `file_manager.write_file`.
 
 ## Wykorzystane biblioteki
 
