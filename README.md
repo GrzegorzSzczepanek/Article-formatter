@@ -30,10 +30,12 @@ Przed uruchomieniem aplikacji należy stworzyć środowisko wirtualne i zainstal
 ```sh
 python3 -m venv venv
 
+source venv/bin/activate
+
 pip install -r requirements.txt
 ```
 > Windows
-```sh
+```cmd
 py -m venv venv
 
 venv\Scripts\activate
@@ -53,6 +55,11 @@ Aby aplikacja mogła korzystać z OpenAI API, ustaw klucz API:
 
 ```sh
 export OPENAI_API_KEY="twój_klucz_api"
+```
+
+
+```cmd
+set OPENAI_API_KEY="twój_klucz_api"
 ```
 
 Zastąp `"twój_klucz_api"` swoim rzeczywistym kluczem API. To polecenie ustawia zmienną środowiskową `OPENAI_API_KEY`, która jest wykorzystywana przez aplikację do uwierzytelnienia się w API OpenAI.
@@ -84,7 +91,7 @@ python3 main.py generate-html --input file.txt --output artykul.html
 
 > Windows
 
-```sh
+```cmd
 py main.py generate-html --input file.txt --output artykul.html
 ```
 
@@ -97,6 +104,7 @@ Parametry opcjonalne:
 
 Po wygenerowaniu pliku `artykul.html`, można użyć poniższego polecenia, aby wygenerować obrazy na podstawie atrybutów `alt` w tagach `<img>`:
 
+> Mac and Windows
 ```sh
 python3 main.py generate-images --html artykul.html
 ```
@@ -109,13 +117,13 @@ Parametr opcjonalny:
 
 Aby wygenerować zarówno HTML, jak i obrazy w jednym procesie, można użyć następujących poleceń razem:
 
-Dla systemów Unix (Linux/macOS):
+> Linux/macOS:
 
 ```sh
 python main.py generate-html --input file.txt --output artykul.html && python main.py generate-images --html artykul.html
 ```
 
-Dla systemu Windows:
+> Windows:
 
 ```sh
 py main.py generate-html --input file.txt --output artykul.html & py main.py generate-images --html artykul.html

@@ -1,3 +1,4 @@
+import logging
 import os
 from bs4 import BeautifulSoup
 import requests
@@ -106,3 +107,30 @@ class FileManager:
             raise Exception(
                 f"An error occurred while downloading the image from '{url}': {e}"
             )
+
+    def insert_content_into_body(self, template_html: str, content_html: str) -> str:
+        """
+        Insert content into the <body> section of a template HTML.
+
+        Args:
+            template_html (str): The HTML template with an empty <body> section.
+            content_html (str): The HTML content to insert into the <body>.
+
+        Returns:
+            str: The combined HTML content.
+        """
+        try:
+            soup = BeautifulSoup(template_html, "html.parser")
+            body = soup.body
+            if body is None:
+                raise ValueError("Szablon HTML nie zawiera sekcji <body>.")
+            
+            body.clear()
+            logger = logging.getLogger(__name__)
+            logger.info("Wstawianie zawartości artykułu do szablonu...")
+
+            article_soup = BeautifulSoup(content_html, "html.parser")
+            body.append(article_soup)
+            return str(soup)
+        except Exception as e:
+            raise Exception(f"An error occurred while inserting content into body: {e}")

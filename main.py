@@ -1,3 +1,5 @@
+
+
 import logging
 import argparse
 import os
@@ -92,34 +94,80 @@ def generate_images(file_manager: FileManager, api_manager: ApiManager, html_fil
 
     except Exception as e:
         logger.error(f"An error occurred while generating images: {e}")
+        
+
+def create_podglad(file_manager: FileManager, szablon_file: str, artykul_file: str, podglad_file: str) -> None:
+    """
+    Creates podglad.html by inserting the content of artykul.html into the body of szablon.html.
+    """
+    try:
+        logger.info(f"Rozpoczynanie tworzenia podglądu HTML. Szablon: '{szablon_file}', Artykuł: '{artykul_file}', Podgląd: '{podglad_file}'.")
+        
+        if not os.path.exists(szablon_file):
+            logger.error(f"Plik szablonu '{szablon_file}' nie istnieje.")
+            return
+        if not os.path.exists(artykul_file):
+            logger.error(f"Plik artykułu '{artykul_file}' nie istnieje.")
+            return
+
+        szablon_content = file_manager.read_file(szablon_file)
+        artykul_content = file_manager.read_file(artykul_file)
+        logger.info("Pomyślnie odczytano zawartość szablonu i artykułu.")
+
+        logger.info("Wstawianie zawartości artykułu do sekcji <body> szablonu...")
+        podglad_content = file_manager.insert_content_into_body(szablon_content, artykul_content)
+        logger.info("Zawartość artykułu została pomyślnie wstawiona do szablonu.")
+
+        file_manager.write_file(podglad_file, podglad_content)
+        logger.info(f"Plik podglądu został zapisany jako '{podglad_file}'.")
+    except Exception as e:
+        logger.error(f"Wystąpił błąd podczas tworzenia podglądu HTML: {e}")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="A CLI tool to generate HTML and images for articles.")
-    subparsers = parser.add_subparsers(dest='command', required=True, help='Sub-commands')
+    parser = argparse.ArgumentParser(description="Narzędzie CLI do generowania HTML i obrazów dla artykułów.")
+    subparsers = parser.add_subparsers(dest='command', required=True, help='Polecenia podrzędne')
 
-    
-    parser_html = subparsers.add_parser('generate-html', help='Generate artykul.html from file.txt')
+    parser_html = subparsers.add_parser('generate-html', help='Generuj artykul.html z pliku tekstowego')
     parser_html.add_argument(
         '--input',
         type=str,
         default='file.txt',
-        help='Input text file containing the article (default: file.txt)'
+        help='Plik wejściowy zawierający artykuł (domyślnie: file.txt)'
     )
     parser_html.add_argument(
         '--output',
         type=str,
         default='artykul.html',
-        help='Output HTML file (default: artykul.html)'
+        help='Plik wyjściowy HTML (domyślnie: artykul.html)'
     )
 
-    
-    parser_images = subparsers.add_parser('generate-images', help='Generate images for existing artykul.html')
+    parser_images = subparsers.add_parser('generate-images', help='Generuj obrazy dla istniejącego artykul.html')
     parser_images.add_argument(
         '--html',
         type=str,
         default='artykul.html',
-        help='HTML file to process (default: artykul.html)'
+        help='Plik HTML do przetworzenia (domyślnie: artykul.html)'
+    )
+
+    parser_podglad = subparsers.add_parser('create-podglad', help='Tworzy podglad.html na podstawie szablonu i artykułu')
+    parser_podglad.add_argument(
+        '--szablon',
+        type=str,
+        default='szablon.html',
+        help='Plik szablonu HTML (domyślnie: szablon.html)'
+    )
+    parser_podglad.add_argument(
+        '--artykul',
+        type=str,
+        default='artykul.html',
+        help='Plik artykułu HTML (domyślnie: artykul.html)'
+    )
+    parser_podglad.add_argument(
+        '--podglad',
+        type=str,
+        default='podglad.html',
+        help='Plik wyjściowy podglądu HTML (domyślnie: podglad.html)'
     )
 
     args = parser.parse_args()
@@ -131,6 +179,8 @@ def main() -> None:
         generate_html(file_manager, api_manager, args.input, args.output)
     elif args.command == 'generate-images':
         generate_images(file_manager, api_manager, args.html)
+    elif args.command == 'create-podglad':
+        create_podglad(file_manager, args.szablon, args.artykul, args.podglad)
     else:
         parser.print_help()
 
