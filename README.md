@@ -1,7 +1,7 @@
 Dokumentacja aplikacji do przetwarzania artykułów z użyciem OpenAI API
 Ta aplikacja CLI automatyzuje process formatowania
 
-# Dokumentacja aplikacji do przetwarzania artykułów z użyciem OpenAI API
+# Dokumentacja aplikacji CLI do przetwarzania artykułów z użyciem OpenAI API
 
 ## Opis projektu
 
